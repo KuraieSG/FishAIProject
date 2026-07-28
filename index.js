@@ -198,6 +198,11 @@ async function handleCatches(interaction) {
 
 client.login(process.env.DISCORD_TOKEN);
 
+    const embed = new EmbedBuilder()
+    .setColor(0xc89b3c)
+    .setTitle(angler ? `Catch log — ${angler.username}` : 'Catch log')
+    .setDescription(lines.join('\n\n'));
+
   await interaction.reply({ embeds: [embed] });
 }
 
