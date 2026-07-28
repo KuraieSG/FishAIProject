@@ -163,7 +163,7 @@ async function handleCatches(interaction) {
   const list = getCatches(interaction.guildId, { userId: angler ? angler.id : null, limit: count });
 
   if (list.length === 0) {
-    await interaction.reply('No catches logged yet — be the first with `/identify`!');
+    await interaction.reply('No catches logged yet — be the first with `/uploadcatch`!');
     return;
   }
 
