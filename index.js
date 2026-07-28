@@ -26,6 +26,8 @@ client.on('interactionCreate', async (interaction) => {
 
   if (interaction.commandName === 'identify') {
     await handleIdentify(interaction);
+  } else if (interaction.commandName === 'uploadcatch') {
+    await handleUploadCatch(interaction);
   } else if (interaction.commandName === 'catches') {
     await handleCatches(interaction);
   }
@@ -124,6 +126,44 @@ async function handleIdentify(interaction) {
   }
 }
 
+async function handleUploadCatch(interaction) {
+  const attachment = interaction.options.getAttachment('photo');
+  const name = interaction.options.getString('name');
+  const location = interaction.options.getString('location');
+
+  if (!attachment || !attachment.contentType || !attachment.contentType.startsWith('image/')) {
+    await interaction.reply({
+      content: 'Please attach an image file (JPG or PNG) with `/uploadcatch`.',
+      ephemeral: true
+    });
+    return;
+  }
+
+  const embed = new EmbedBuilder()
+    .setColor(0xc89b3c)
+    .setTitle(name)
+    .setThumbnail(attachment.url)
+    .addFields({ name: 'Location', value: location })
+    .setFooter({ text: `Logged by ${interaction.user.username}` })
+    .setTimestamp();
+
+  await interaction.reply({ embeds: [embed] });
+
+  if (interaction.guildId) {
+    addCatch(interaction.guildId, {
+      userId: interaction.user.id,
+      username: interaction.user.username,
+      name,
+      scientificName: '',
+      confidence: 'manual entry',
+      alternates: [],
+      location,
+      imageUrl: attachment.url,
+      timestamp: Date.now()
+    });
+  }
+}
+
 async function handleCatches(interaction) {
   if (!interaction.guildId) {
     await interaction.reply({ content: 'This command only works inside a server.', ephemeral: true });
@@ -152,6 +192,11 @@ async function handleCatches(interaction) {
     .setColor(0xc89b3c)
     .setTitle(angler ? `Catch log — ${angler.username}` : 'Catch log')
     .setDescription(lines.join('\n\n'));
+
+  await interaction.reply({ embeds: [embed] });
+}
+
+client.login(process.env.DISCORD_TOKEN);
 
   await interaction.reply({ embeds: [embed] });
 }
