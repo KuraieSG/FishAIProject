@@ -17,6 +17,20 @@ const commands = [
     .toJSON(),
 
   new SlashCommandBuilder()
+    .setName('uploadcatch')
+    .setDescription('Manually log a catch (no AI identification) to the server catch log')
+    .addAttachmentOption((opt) =>
+      opt.setName('photo').setDescription('Photo of your catch').setRequired(true)
+    )
+    .addStringOption((opt) =>
+      opt.setName('name').setDescription('Fish name').setRequired(true)
+    )
+    .addStringOption((opt) =>
+      opt.setName('location').setDescription('Where you caught it').setRequired(true)
+    )
+    .toJSON(),
+
+  new SlashCommandBuilder()
     .setName('catches')
     .setDescription("Show this server's recent catch log")
     .addIntegerOption((opt) =>
