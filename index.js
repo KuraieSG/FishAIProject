@@ -104,20 +104,7 @@ async function handleIdentify(interaction) {
     }
 
     await interaction.editReply({ embeds: [embed] });
-
-    if (interaction.guildId) {
-      addCatch(interaction.guildId, {
-        userId: interaction.user.id,
-        username: interaction.user.username,
-        name: top.common_name || 'Unknown species',
-        scientificName: top.scientific_name || '',
-        confidence: typeof top.confidence_percent === 'number' ? `${Math.round(top.confidence_percent)}%` : 'unknown',
-        alternates: candidates.slice(1).map((c) => c.common_name).filter(Boolean),
-        location: location || null,
-        imageUrl: attachment.url,
-        timestamp: Date.now()
-      });
-    }
+    
   } catch (err) {
     console.error('Identify error:', err);
     await interaction.editReply(
